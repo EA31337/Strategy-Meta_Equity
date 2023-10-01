@@ -24,7 +24,7 @@ INPUT2 int Meta_Equity_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT2 int Meta_Equity_SignalCloseMethod = 0;        // Signal close method
 INPUT2 int Meta_Equity_SignalCloseFilter = 32;       // Signal close filter (-127-127)
 INPUT2 float Meta_Equity_SignalCloseLevel = 0;       // Signal close level
-INPUT2 int Meta_Equity_PriceStopMethod = 0;          // Price limit method
+INPUT2 int Meta_Equity_PriceStopMethod = 1;          // Price limit method
 INPUT2 float Meta_Equity_PriceStopLevel = 2;         // Price limit level
 INPUT2 int Meta_Equity_TickFilterMethod = 32;        // Tick filter method (0-255)
 INPUT2 float Meta_Equity_MaxSpread = 4.0;            // Max spread to trade (in pips)
@@ -282,6 +282,47 @@ class Stg_Meta_Equity : public Strategy {
     _strat.Ptr().OnInit();
     strats.Set(_index, _strat);
     return _result;
+  }
+
+  /**
+   * Gets price stop value.
+   */
+  float PriceStop(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0f,
+                  short _bars = 4) {
+    float _result = 0;
+    if (_method == 0) {
+      // Ignores calculation when method is 0.
+      return (float)_result;
+    }
+    float _equity_pct = (float)Math::ChangeInPct(account.GetTotalBalance(), account.AccountEquity());
+    Ref<Strategy> _strat_ref;
+    if (_equity_pct > -5.0f && _equity_pct < 5.0f) {
+      // Equity value is in normal range (between -5% and 5%).
+      _strat_ref = strats.GetByKey(1);
+    } else if (_equity_pct >= 10.0f) {
+      // Equity value is very high (greater than 10%).
+      _strat_ref = strats.GetByKey(4);
+    } else if (_equity_pct <= -10.0f) {
+      // Equity value is very low (lower than 10%).
+      _strat_ref = strats.GetByKey(5);
+    } else if (_equity_pct >= 5.0f) {
+      // Equity value is high (between 5% and 10%).
+      _strat_ref = strats.GetByKey(2);
+    } else if (_equity_pct <= -5.0f) {
+      // Equity value is low (between -5% and -10%).
+      _strat_ref = strats.GetByKey(3);
+    }
+
+    if (!_strat_ref.IsSet()) {
+      // Returns false when strategy is not set.
+      return false;
+    }
+
+    _level = _level == 0.0f ? _strat_ref.Ptr().Get<float>(STRAT_PARAM_SOL) : _level;
+    _method = _strat_ref.Ptr().Get<int>(STRAT_PARAM_SOM);
+    //_shift = _shift == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SHIFT) : _shift;
+    _result = _strat_ref.Ptr().PriceStop(_cmd, _mode, _method, _level /*, _shift*/);
+    return (float)_result;
   }
 
   /**
