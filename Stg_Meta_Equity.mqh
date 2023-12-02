@@ -9,11 +9,11 @@
 
 // User input params.
 INPUT2_GROUP("Meta Equity strategy: main params");
-INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_Normal = STRAT_DEMARKER;  // Strategy for normal equity (-5-5%)
-INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_GT_5 = STRAT_NONE;        // Strategy for high equity (5-10%)
-INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_LT_5 = STRAT_NONE;        // Strategy for low equity (-5-10%)
-INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_GT_10 = STRAT_NONE;       // Strategy for very high equity (>10%)
-INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_LT_10 = STRAT_NONE;       // Strategy for very low equity (<-10%)
+INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_Normal = STRAT_MA_BREAKOUT;  // Strategy for normal equity (-5-5%)
+INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_GT_5 = STRAT_MA_TREND;       // Strategy for high equity (5-10%)
+INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_LT_5 = STRAT_MA_TREND;       // Strategy for low equity (-5-10%)
+INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_GT_10 = STRAT_NONE;          // Strategy for very high equity (>10%)
+INPUT2 ENUM_STRATEGY Meta_Equity_Strategy_Equity_LT_10 = STRAT_NONE;          // Strategy for very low equity (<-10%)
 INPUT3_GROUP("Meta Equity strategy: common params");
 INPUT3 float Meta_Equity_LotSize = 0;                // Lot size
 INPUT3 int Meta_Equity_SignalOpenMethod = 0;         // Signal open method
