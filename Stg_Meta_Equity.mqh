@@ -152,7 +152,7 @@ class Stg_Meta_Equity : public Strategy {
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method, float _level = 0.0f, int _shift = 0) {
     bool _result = true;
     // uint _ishift = _indi.GetShift();
-    float _equity_pct = (float)Math::ChangeInPct(account.GetTotalBalance(), account.AccountEquity());
+    float _equity_pct = (float)Math::ChangeInPct(account.GetTotalBalance(), account.AccountEquity(), true);
     Ref<Strategy> _strat_ref;
     if (_equity_pct > -5.0f && _equity_pct < 5.0f) {
       // Equity value is in normal range (between -5% and 5%).
